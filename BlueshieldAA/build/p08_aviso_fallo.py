@@ -1,0 +1,3 @@
+# Si la vez anterior el programa se cerró por un fallo, se avisa al abrir (el detalle está en
+# C:\ProgramData\BlueShieldAA\v4\fallos.txt).
+rep("  S.init = await caInit();\n", "  S.init = await caInit();\n  if (S.init && S.init.crash) setTimeout(() => modal('La última vez BlueShieldAA se cerró por un fallo', `<p class=\"help\">Ha quedado anotado para poder corregirlo:</p><pre class=\"crashbox\">${esc(S.init.crash)}</pre><p class=\"help\">El detalle completo está en <b>fallos.txt</b>, en la carpeta de datos (Ajustes → Abrir carpeta de registros). Envíamelo y lo corrijo.</p>`, [{t:'Abrir la carpeta', f:() => caOpenLogs()}, {t:'Entendido', c:'pri'}]), 1200);\n")

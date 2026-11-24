@@ -1,0 +1,310 @@
+BlueShieldAA - notas de versión
+================================
+
+4.2.1 (24/11/2026) - Versión pública
+------------------------------------
+- Textos para uso doméstico: los avisos del anti-ransomware ya no dicen «avisa a TI» sino
+  dónde mirar en BlueShieldAA; «Administrador» en lugar de «Administrador de TI».
+- Licencia MIT en la información del programa y del instalador.
+- Datos de ejemplo de las pruebas sin nombres reales.
+
+4.2.0 (23/11/2026) - Siempre al día, Tráfico, Aplicaciones, Hardware y Mis cuentas
+-----------------------------------------------------------------------------------
+NO ESTÁ PROBADO EN UN WINDOWS REAL Y NO ESTÁ FIRMADO DIGITALMENTE.
+
+Lo que se ve, siempre al día
+- Fuera el «778 MB» de Limpieza en el menú.
+- Al borrar desde Limpieza se vuelve a MEDIR de verdad cada carpeta tocada (antes se restaba
+  una estimación): si un programa abierto deja archivos en uso, se ve lo que queda de verdad.
+  Los archivos grandes borrados desaparecen de «Archivos más grandes».
+- Después de cualquier tarea (actualizar, limpiar, corregir) se vuelven a comprobar en segundo
+  plano los apartados tocados: versión instalada, espacio que queda, ajuste aplicado.
+- Limpieza rápida medida sin PowerShell (mucho más rápida) y con cachés de Brave y Firefox.
+- Avisos del menú: el número son los avisos que aún no has visto. Al entrar en el apartado
+  desaparece; si aparece uno nuevo (o cambia de estado) vuelve. Se recuerda al cerrar.
+Procesos: el resumen son tarjetas que filtran la lista (a revisar, sin firmar, usan la red,
+  más CPU).
+Tráfico en vivo, rehecho
+- Gráfica de bajada y subida de los últimos 2 minutos (con valores al pasar el ratón).
+- Cada conexión: tipo de programa (navegador, sistema, comunicación, nube, juegos…), tipo de
+  servicio (web segura, sin cifrar, DNS, correo, acceso remoto, archivos compartidos…), dueño
+  y país del destino (Google, Microsoft, Cloudflare… vía DNS de Team Cymru, gratis y sin clave),
+  si es saliente o ENTRANTE, estado y desde cuándo.
+- Agrupado por programa o en lista, filtros por Internet / red local / sospechosas / tipo.
+- Más ligero: solo se consulta la ruta de los procesos que tienen conexiones.
+Aplicaciones: ahora salen todas (registro de Windows de todos los usuarios + del usuario que
+  está delante + apps de Microsoft Store), con editor, versión, tamaño, fecha, si hay versión
+  nueva, abrir su carpeta y desinstalar (abre su propio desinstalador; la lista se actualiza sola).
+Hardware dividido
+- Componentes: procesador, memoria (ranuras y módulos), gráfica, discos con su salud, batería,
+  placa base y BIOS, red y Windows (versión y compilación).
+- Conectados: ratones, teclados, cascos, pantallas, USB, Bluetooth… agrupados por aparato
+  físico, con conexión, fabricante, VID:PID, controlador, firmware (si lo da) y estado. Se
+  actualiza cada 5 s (conecta algo y aparece).
+- Todos los dispositivos: los internos, con los que tienen problemas primero (código de error
+  explicado).
+Mis cuentas (Protección): cuentas de Google, Microsoft (personal y de trabajo), Apple… que hay
+  en Windows, Office/Outlook, Chrome, Edge, Brave, Firefox y Thunderbird, con botones a sus
+  páginas oficiales de actividad, dispositivos y ubicación, y comprobación de filtraciones.
+  Inicios de sesión en ESTE equipo (14 días): en persona, desbloqueo, Escritorio remoto, con IP
+  y país, y los intentos fallidos.
+  Nota: Google y Microsoft no permiten leer el historial de inicios de sesión de una cuenta
+  personal sin registrar una aplicación con claves, por eso se abre su página oficial.
+Ajustes para uso doméstico: fuera Bases de vulnerabilidades, Mis webs, Proyectos npm,
+  Servidores, Actualizaciones del programa, Panel de empresa, pip, Docker Scout y el informe
+  de cumplimiento NIS2/ENS.
+Modo oscuro nuevo: grafito neutro, sin azules saturados ni brillos.
+Rendimiento
+- Al abrir ya no se lanza un análisis que bloquea la ventana: si lo guardado tiene menos de
+  30 min no se hace nada; si no, se pone al día en segundo plano (lo lento solo cada 6 h).
+- Como mucho 2 analizadores a la vez y con prioridad baja.
+- Ficha del equipo guardada (equipo.json): Diagnóstico y Hardware abren al momento.
+- Ventana más ligera (sin tareas de fondo del motor web) y límite de memoria.
+
+4.1.0 (23/11/2026) - Anti-ransomware con modo contención
+----------------------------------------------------------
+NO ESTÁ PROBADO EN UN WINDOWS REAL Y NO ESTÁ FIRMADO DIGITALMENTE.
+
+Protección → Anti-ransomware vuelve, rehecho:
+- Detección: 5 documentos trampa ocultos y válidos (Word, Excel, PDF, texto, foto) en
+  Escritorio, Documentos, Imágenes y Descargas de cada usuario local, Documentos públicos
+  y la raíz de los discos de datos. Nunca en OneDrive/SharePoint/nubes, red, USB ni en el
+  perfil .adm. Se revisan cada 0,5 s.
+- Órdenes previas al cifrado (vssadmin delete shadows, wmic shadowcopy delete, bcdedit
+  recoveryenabled no, wbadmin delete…): se cortan siempre, también en simulacro. Si las lanzó
+  un programa que no es de Microsoft, se considera un ataque.
+- Guardián: tarea programada \BlueShieldAA\Guardian como SYSTEM (al arrancar Windows, se
+  reinicia si falla), BlueShieldAA.exe --guardian. Solo en la versión instalada.
+- Dos modos. SIMULACRO (por defecto): avisa en pantalla y apunta qué habría cerrado y qué
+  servicios habría parado. CONTENER: congela al culpable (los procesos que más escribían en
+  disco), lo pone en cuarentena y pone el equipo en cuarentena:
+    · solo se ejecutan programas firmados por Microsoft (y BlueShieldAA, antivirus y
+      controladores de Intel/AMD/NVIDIA/Realtek); PowerShell, cmd, wscript, mshta, vssadmin,
+      wmic, bcdedit y similares se cierran al momento;
+    · red cortada con dos reglas de bloqueo del cortafuegos (se exporta antes la
+      configuración y se vuelve a importar al liberar);
+    · se paran (y desactivan) Servidor/Estación de trabajo (SMB), Escritorio remoto, WinRM,
+      Registro remoto, SSH… y los servicios que no son de Microsoft; se apunta cómo estaban.
+    · se mantiene tras reiniciar. Aviso fijo en la ventana y mensaje en todas las sesiones.
+- Salir de la cuarentena: lista de comprobación (culpable detenido, análisis completo de
+  Defender sin amenazas posterior al ataque u otro antivirus, sin inicio automático nuevo o
+  revisado, sin nuevas detecciones) y escribir LIBERAR. Botón para el análisis sin conexión
+  de Defender. Ninguna herramienta garantiza el 100 %: si llegó a cifrar, reinstalar.
+- Escape: desbloquear.cmd (carpeta del programa, como administrador) quita la contención
+  aunque la ventana no abra. Al desinstalar se quita todo (tarea, contención y señuelos).
+- Registro del guardián: C:\ProgramData\BlueShieldAA\v4\guardian.log.
+OJO: un proceso SYSTEM que cierra programas, corta la red y para servicios puede aumentar
+las sospechas de los antivirus hasta que el programa esté firmado.
+
+4.0.6 (23/11/2026) - Menos PowerShell (detección de Defender)
+--------------------------------------------------------------
+NO ESTÁ PROBADO EN UN WINDOWS REAL Y NO ESTÁ FIRMADO DIGITALMENTE.
+
+Defender lo detectaba mientras el programa estaba abierto ("ejecuta comandos de un atacante",
+Caballo de Troya). El programa lanzaba PowerShell oculto continuamente para consultar el
+sistema (cada 2 s en Tráfico en vivo y cada 5 s en Procesos), que es el patrón de un troyano
+de control remoto. Ahora se usan las funciones nativas de Windows (las del Administrador de
+tareas y netstat):
+- Conexiones de red y puertos abiertos: tabla de conexiones de Windows.
+- Lista de procesos, usuario, memoria, inicio y línea de órdenes: funciones del sistema.
+- Empresa, descripción y firma digital de cada programa: lectura directa (con caché).
+- Analizar archivo: firma digital y origen (Zone.Identifier) sin PowerShell.
+- Terminar un proceso y comprobar si un programa está abierto antes de actualizarlo: nativo.
+PowerShell solo se usa al pulsar Escanear o al aplicar una corrección, nunca en bucle.
+
+4.0.5 (23/11/2026)
+------------------
+NO ESTÁ PROBADO EN UN WINDOWS REAL Y NO ESTÁ FIRMADO DIGITALMENTE.
+
+Anillo de porcentaje de la ventana de progreso
+- Cuando no hay porcentaje, el arco gira sobre su propio centro (antes daba vueltas
+  alrededor de una esquina) y en lugar de "•••" se ven los segundos que lleva.
+- El número y el anillo avanzan de forma suave y nunca retroceden dentro de la misma tarea
+  (antes bajaban al pasar de "descargando" a "instalando"). El motor tampoco manda
+  porcentajes hacia atrás.
+- El aro de fondo toma el color de la tarea.
+
+4.0.4 (23/11/2026) - Limpieza nueva
+-----------------------------------
+NO ESTÁ PROBADO EN UN WINDOWS REAL Y NO ESTÁ FIRMADO DIGITALMENTE.
+
+Por qué a veces no limpiaba
+- El programa corre con la cuenta .adm: "Vaciar papelera" vaciaba la papelera de la .adm,
+  no la tuya, y aun así marcaba "Limpio". Los temporales solo se borraban si tenían más de
+  24 h y nadie comprobaba cuánto se había liberado.
+- Ahora la limpieza rápida vacía las papeleras de TODOS los usuarios y de todas las unidades,
+  los temporales y cachés de todos los perfiles, y MIDE lo liberado y lo que queda. Si no se
+  ha podido borrar nada (archivos en uso), lo dice y no lo marca como limpio.
+
+Explorador de espacio (como SizeTree / WinDirStat) en Mantenimiento → Limpieza
+- Recorre la unidad entera en paralelo (sin seguir enlaces ni puntos de montaje).
+- "Se puede liberar": todo lo que se puede borrar sin perder nada (temporales, cachés de
+  navegadores, Discord, NVIDIA/AMD, npm, pip, Steam, papeleras, volcados, descargas de
+  Windows Update…) con un botón "Liberar X GB".
+- "Con la herramienta de Windows": hibernación (powercfg), componentes de Windows (DISM) y
+  Windows.old (Configuración de almacenamiento). Nunca se borran a mano.
+- "Revisa antes": instaladores de hace más de un mes en Descargas, ISO y vídeos enormes.
+- "Explorar carpetas": árbol ordenado por tamaño con barras y mapa de rectángulos
+  interactivo. Cada elemento dice si se puede borrar, si es personal o si es del sistema.
+- "Archivos más grandes" de toda la unidad.
+- Marcar varios y "Enviar a la papelera" o "Borrar definitivamente", con confirmación. Lo
+  del sistema, la raíz de la unidad y las carpetas principales de cada usuario no se dejan
+  borrar. Al terminar dice cuánto se ha liberado de verdad y qué se ha quedado por estar en uso.
+- Si se manda a la papelera, el espacio no se libera hasta vaciarla (y se avisa).
+
+4.0.3 (23/11/2026)
+------------------
+NO ESTÁ PROBADO EN UN WINDOWS REAL Y NO ESTÁ FIRMADO DIGITALMENTE.
+
+Actualizaciones que fallaban (p. ej. OBS Studio, código 6)
+- Antes daba por buena la actualización si veía "correctamente" en la salida de winget (y
+  esa palabra sale en "El hash del instalador se verificó correctamente"). Ahora decide por
+  el código de salida y después comprueba la versión instalada de verdad.
+- Antes de instalar comprueba si el programa está abierto. Si lo está, no lanza el instalador
+  y ofrece "Cerrar y actualizar" (lo cierra con normalidad, como la X; nunca a la fuerza).
+- Códigos de error explicados (programa en uso, otra instalación en marcha, sin espacio,
+  bloqueado por directiva, reinicio pendiente…). Si hay otra instalación en marcha reintenta
+  una vez al minuto.
+
+Diagnóstico
+- Los núcleos salían con NaN %: ahora muestran el uso y la mini gráfica del último minuto.
+- Completada la información del equipo (módulos de memoria, caché, placa, sistema, red,
+  paginación y bloques del núcleo).
+
+Analizar archivo
+- Menos falsos positivos: los comentarios del código no cuentan; un .js solo puntúa si usa
+  Windows Script Host (WScript, ActiveXObject…); en los PDF se descomprime el JavaScript y
+  solo puntúan funciones peligrosas de verdad (lanzar programas, extraer adjuntos, exploits),
+  no los cálculos de formularios ni las acciones al abrir que solo colocan la página.
+- Nuevo: "Probar en un entorno aislado" (como ANY.RUN, pero en tu equipo). Usa Windows
+  Sandbox (Windows 10/11 Pro, Enterprise o Education): abre el archivo en una máquina
+  desechable SIN RED y graba capturas de pantalla, árbol de procesos con su línea de
+  órdenes, archivos creados, inicio automático, tareas y servicios nuevos, y unos documentos
+  señuelo por si cifra. El resultado se combina con el análisis estático: si la prueba real
+  sale limpia y lo estático solo eran indicios, deja de marcarse como sospechoso.
+  Si Windows Sandbox no está activado se puede activar desde ahí (pide reiniciar).
+  Windows Sandbox no trae Office: en documentos de Word/Excel el resultado es "no concluyente".
+- El script del entorno aislado va aparte y legible: sandbox-monitor.ps1.
+
+Eventos → Procesos (nuevo)
+- Lo que se está ejecutando ahora: árbol padre-hijo, usuario, CPU, memoria, firma digital,
+  conexiones de red y avisos (sin firmar en Temp/Descargas, nombres de Windows en carpetas
+  falsas, consolas con órdenes ocultas…). Desde cada proceso: analizar su archivo, mostrarlo
+  en la carpeta, ver sus conexiones o terminarlo (con confirmación; nunca los de Windows).
+
+4.0.2 (23/11/2026) - Falso positivo del antivirus
+-------------------------------------------------
+NO ESTÁ PROBADO EN UN WINDOWS REAL Y NO ESTÁ FIRMADO DIGITALMENTE.
+Sin firma digital, un antivirus puede seguir desconfiando: ver "Si vuelve a saltar" abajo.
+
+Qué hacía que pareciera malware y qué se ha cambiado
+- La librería de la ventana llevaba WebView2Loader.dll metida dentro del .exe y la cargaba
+  directamente en memoria (técnica típica de malware). Ahora la DLL oficial de Microsoft
+  (firmada) va como archivo aparte junto al programa y se carga con el cargador de Windows.
+- PowerShell se lanzaba con -EncodedCommand (Base64) y -ExecutionPolicy Bypass. Ahora el
+  script va en claro con -Command y sin saltarse nada.
+- Las reglas del motor de "Analizar archivo" (textos como los que usa el malware para borrar
+  copias o robar contraseñas) estaban dentro del ejecutable. Ahora están en
+  reglas-analisis.json, un archivo de datos legible junto al programa, como las definiciones
+  de un antivirus. Si falta, el análisis avisa.
+- El programa ya no apaga/enciende Defender por comandos: si la protección en tiempo real
+  está desactivada, abre Seguridad de Windows para que la actives tú.
+- Ya no se relanza a sí mismo para pedir permisos: lo pide Windows desde el manifiesto.
+- El instalador ya no usa taskkill /F ni PowerShell: cierra la ventana con un mensaje normal
+  y borra las tareas antiguas con schtasks.
+- Más datos de versión en el ejecutable.
+
+Si vuelve a saltar
+- Apunta el nombre exacto de la detección (Seguridad de Windows → Historial de protección).
+- Envíalo a Microsoft como falso positivo: https://www.microsoft.com/en-us/wdsi/filesubmission
+  (como "Software developer", "Incorrectly detected as malware/malicious").
+- La solución definitiva es firmar el ejecutable con un certificado de firma de código.
+
+4.0.1 (23/11/2026)
+------------------
+NO ESTÁ PROBADO EN UN WINDOWS REAL Y NO ESTÁ FIRMADO DIGITALMENTE.
+
+Cierre inesperado al actualizar
+- Varias partes del motor podían tocar a la vez los ajustes y la lista (al marcar, actualizar
+  o refrescar en segundo plano). Go cierra el programa sin avisar en ese caso. Ahora todo
+  pasa por un único cerrojo y la ventana recibe copias, no los datos en uso.
+- Si una función de la interfaz falla, se captura: el programa sigue abierto y se anota.
+- Los fallos graves quedan en C:\ProgramData\BlueShieldAA\v4\fallos.txt y, al abrir la
+  próxima vez, el programa avisa con el motivo.
+- Si la interfaz manda más o menos datos de los esperados ya no falla la llamada.
+
+Ventana de progreso
+- Una escena distinta y con sentido para cada tarea: analizar (radar y un punto por
+  comprobación), actualizar programas (descarga desde la nube con el porcentaje real de
+  winget), Windows Update, limpiar (hojas a la papelera), ajustes de seguridad (escudo e
+  interruptores), punto de restauración (copias del equipo) y terminado. Sin bloques
+  flotando. El color cambia según la tarea.
+- Debajo: el elemento en curso, la subtarea ("Descargando 40 MB de 98 MB"), "Elemento 2
+  de 5" y fichas de hecho / en curso / en espera.
+- Consola en vivo: cada orden que se lanza (winget, PowerShell, MpCmdRun…) y todo lo que
+  responde, en directo.
+
+Aspecto
+- Fuentes incrustadas: Inter (texto), Space Grotesk (títulos y cifras) y JetBrains Mono
+  (consola y datos técnicos). Antes caían en Times New Roman. Licencia SIL OFL 1.1.
+- Etiquetas de estado nuevas, con icono propio por estado y mejor contraste en tema
+  claro y oscuro.
+
+4.0.0 (22/11/2026) - Motor rehecho desde cero
+---------------------------------------------
+El código fuente de la 3.11.4 se perdió. La 4.0 reaprovecha la interfaz completa
+(recuperada de la 3.11.3) y rehace el motor en Go con el mismo contrato de datos.
+
+NO ESTÁ PROBADO EN UN WINDOWS REAL Y NO ESTÁ FIRMADO DIGITALMENTE.
+Pruébalo primero en un equipo que no sea crítico.
+
+Funciona en la 4.0
+- Inicio: puntuación, evolución, estado por apartado, recomendaciones, almacenamiento.
+- Actualizaciones: programas con winget (se actualizan en silencio) y Windows Update
+  (búsqueda e instalación). Los programas con fallos recientes en CISA KEV salen con
+  "Prioridad alta". Historial con "Deshacer" (vuelve a la versión anterior con winget).
+- Protección → Ajustes: antivirus (Defender o el de otra marca), firmas, protección contra
+  alteraciones, acceso controlado a carpetas, firewall por perfil, BitLocker, UAC, SMBv1,
+  Escritorio remoto/NLA, cuenta de invitado, Secure Boot, reinicio pendiente.
+  Ajustes que usaría un atacante: WDigest, NTLMv1, LLMNR, protección de LSA, autorun,
+  PowerShell 2.0. Casi todo se corrige con un botón.
+- Protección → Analizar archivo: motor 4.0 por combinaciones de comportamiento (scripts,
+  accesos directos, HTA, macros de Office, PDF, ZIP, HTML de phishing, ejecutables disfrazados),
+  firma digital, de dónde viene (Zone.Identifier), Team Cymru MHR, AlienVault OTX,
+  CIRCL hashlookup y Defender como segunda opinión. Cuarentena con restaurar y borrar.
+- Protección → Filtraciones: Have I Been Pwned (k-anonimato) y XposedOrNot.
+- Protección → Cambios: programas de inicio, tareas, servicios y administradores nuevos
+  desde el análisis anterior (el primer análisis solo guarda la foto inicial).
+- Red → Exposición: puertos abiertos e intentos de inicio de sesión fallidos (24 h) con
+  bloqueo de la IP en el firewall. Red → Tráfico en vivo (no marca a la propia app).
+- Eventos (7 días): apagados inesperados, pantallazos azules, disco, WHEA, programas y
+  servicios que fallan, amenazas de Defender, servicios nuevos, registro borrado.
+- Diagnóstico en vivo (procesador, memoria, disco, red, gráfica, procesos, batería).
+- Mantenimiento → Limpieza y Hardware (salud y desgaste de discos, batería, espacio).
+- Herramientas (62 webs), informe TXT, informe de seguridad e informe de cumplimiento
+  orientativo ENS/NIS2 (en C:\Users\Public\Documents\BlueShieldAA).
+
+Todavía NO está en la 4.0 (vuelve en próximas 4.x)
+- Anti-ransomware (señuelos y guardián). En su página se explica y se remite al Acceso
+  controlado a carpetas de Windows.
+- Modo dividido (motor como .adm y ventana como el usuario del escritorio). En la 4.0 todo
+  corre con la cuenta que eleva: winget ve los programas de esa cuenta y de todo el equipo,
+  pero no los instalados solo para tu usuario normal.
+- Panel de empresa, informes a SharePoint/OneDrive, revisión nocturna y revisión cada 30 min.
+- NVD, Aplicaciones (Store/preinstaladas), extensiones de navegadores, vigilancia de webs
+  y Keycloak, MalwareBazaar/URLhaus/Signature-Base, autoactualización de BlueShieldAA.
+
+Cambios al instalar sobre la 3.x
+- Se borran las tareas programadas de la carpeta \BlueShieldAA\ del Programador de tareas
+  (la 4.0 no las usa). Solo en este equipo. Si alguna vieja quedara, el .exe nuevo sale sin
+  hacer nada al recibir sus argumentos (--guard, --agent, --watch…).
+- Los datos nuevos van a C:\ProgramData\BlueShieldAA\v4 (solo SYSTEM y Administradores
+  pueden modificarla). Los de la 3.x se quedan intactos por si hay que volver atrás.
+- Versión portable: carpeta "datos\v4" junto al programa.
+
+Compilar (desde Linux)
+  python3 build/apply.py
+  cd src/native && bash build.sh
+Necesita go 1.24, binutils-mingw-w64 (windres) y nsis. Las librerías (go-webview2,
+go-winloader, x/sys v0.30.0) van incluidas en src/native/third_party: no se descarga nada.
+Tests: cd src/native/app && GOFLAGS=-mod=mod GOPROXY=off go test .
