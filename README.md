@@ -4,7 +4,7 @@
 
 > ⚠️ **Proyecto en beta y todavía sin firma digital.** Windows SmartScreen o tu antivirus pueden avisar al descargarlo o al ejecutarlo. El código está aquí para que puedas revisarlo y compilarlo tú mismo.
 
-![Inicio en modo oscuro](docs/capturas/01-inicio-oscuro.png)
+![Inicio en modo oscuro](BlueshieldAA/docs/capturas/01-inicio-oscuro.png)
 
 ## Qué hace
 
@@ -26,10 +26,10 @@
 
 | | |
 |---|---|
-| ![Tráfico en vivo](docs/capturas/02-trafico-en-vivo.png) | ![Anti-ransomware](docs/capturas/03-anti-ransomware.png) |
-| ![Modo contención](docs/capturas/04-modo-contencion.png) | ![Analizar archivo](docs/capturas/05-analizar-archivo.png) |
-| ![Limpieza](docs/capturas/06-limpieza.png) | ![Hardware](docs/capturas/07-hardware-conectados.png) |
-| ![Aplicaciones](docs/capturas/08-aplicaciones.png) | ![Procesos](docs/capturas/09-procesos-oscuro.png) |
+| ![Tráfico en vivo](BlueshieldAA/docs/capturas/02-trafico-en-vivo.png) | ![Anti-ransomware](BlueshieldAA/docs/capturas/03-anti-ransomware.png) |
+| ![Modo contención](BlueshieldAA/docs/capturas/04-modo-contencion.png) | ![Analizar archivo](BlueshieldAA/docs/capturas/05-analizar-archivo.png) |
+| ![Limpieza](BlueshieldAA/docs/capturas/06-limpieza.png) | ![Hardware](BlueshieldAA/docs/capturas/07-hardware-conectados.png) |
+| ![Aplicaciones](BlueshieldAA/docs/capturas/08-aplicaciones.png) | ![Procesos](BlueshieldAA/docs/capturas/09-procesos-oscuro.png) |
 
 *Las capturas usan datos de ejemplo.*
 
@@ -78,4 +78,4 @@ Proyecto personal en desarrollo activo. Las funciones que tocan el sistema (cont
 
 ## Licencia
 
-[MIT](LICENSE). Incluye [go-webview2](src/native/third_party/go-webview2/LICENSE) (MIT) y [golang.org/x/sys](src/native/third_party/sys/LICENSE) (BSD-3-Clause), con sus licencias.
+[MIT](BlueshieldAA/LICENSE). Incluye [go-webview2](BlueshieldAA/src/native/third_party/go-webview2/LICENSE) (MIT) y [golang.org/x/sys](BlueshieldAA/src/native/third_party/sys/LICENSE) (BSD-3-Clause), con sus licencias.
